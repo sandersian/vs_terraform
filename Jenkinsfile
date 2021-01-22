@@ -4,7 +4,8 @@ pipeline {
     stages {
         stage('--- ENV Setup ---') {
             steps {
-                sh 'echo SHELL; echo $SHELL'
+                withCredentials([string(credentialsId: 'dummycred', variable: 'USERPASS')]) {
+                    echo $USERPASS
             }
         }
         stage('--- Terraform - Init ---') {
