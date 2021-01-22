@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('--- ENV Setup ---') {
             steps {
-                withCredentials([usernameColonPassword(credentialsId: 'vault', usernameVariable: 'VAULT_USER', passwordVariable: 'VAULT_PASS')]) {
+                withCredentials([usernamePassword(credentialsId: 'vault', usernameVariable: 'VAULT_USER', passwordVariable: 'VAULT_PASS')]) {
                     sh '/var/jenkins_home/vault_config'
                 }
             }
