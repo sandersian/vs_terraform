@@ -1,7 +1,7 @@
 pipeline {
     agent {
         node {
-            label 'vs_terraform-workspace'
+            label 'Terraform Destroy'
             customWorkspace 'vs_terraform'
         }
     }
