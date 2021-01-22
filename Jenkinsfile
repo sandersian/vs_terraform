@@ -6,6 +6,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'dummycred', variable: 'USERPASS')]) {
                     sh 'echo $USERPASS'
+                }
             }
         }
         stage('--- Terraform - Init ---') {
