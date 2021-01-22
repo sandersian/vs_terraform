@@ -2,13 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('--- ENV Setup ---') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'vault', usernameVariable: 'VAULT_USER', passwordVariable: 'VAULT_PASS')]) {
-                    sh '. /var/jenkins_home/vault_config'
-                }
-            }
-        }
         stage('--- Terraform - Init ---') {
             steps {
                 sh 'terraform init'
@@ -16,7 +9,10 @@ pipeline {
         }
         stage('Terraform - Apply---') {
             steps {
-                sh 'terraform apply -auto-approve'
+                withVault(configuration: [engineVersion: 2, timeout: 60, vaultCredentialId: 'vault', vaultUrl: 'https://vault01.hq.vs:8200'], vaultSecrets: [[path: 'secret/ansible/consul_basic_read', secretValues: [[envVar: 'CONSUL_HTTP_TOKEN', vaultKey: 'token'], [envVar: 'CONSUL_HTTP_ADDR', vaultKey: 'consul_http_addr'], [envVar: 'CONSUL_HTTP_SSL', vaultKey: 'consul_http_ssl']]]]) {
+                    sh 'terraform apply -auto-approve'
+                }
+                
             }
         }
     }
