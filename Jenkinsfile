@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('--- ENV Setup ---') {
             steps {
-                withCredentials([string(credentialsId: 'dummycred', variable: 'USERPASS')]) {
+                withCredentials([usernameColonPassword(credentialsId: 'dummycred', variable: 'USERPASS')]) {
                     sh 'echo -n "CREDS-";echo $USERPASS'
                 }
             }
