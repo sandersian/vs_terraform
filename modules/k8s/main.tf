@@ -42,7 +42,7 @@ resource "xenorchestra_vm" "worker_nodes" {
 
   provisioner "local-exec" {
     when    = destroy
-    command = "cd vs_ansible && ansible -i consul_inventory ${each.key} -u ansible --become -a \"systemctl stop consul\""
+    command = "cd vs_ansible && ansible -i ${each.key}, -u ansible --become -a \"systemctl stop consul\""
   }
 }
 
@@ -74,6 +74,6 @@ resource "xenorchestra_vm" "master_nodes" {
 
   provisioner "local-exec" {
     when    = destroy
-    command = "cd vs_ansible && ansible -i consul_inventory ${each.key} -u ansible --become -a \"systemctl stop consul\""
+    command = "cd vs_ansible && ansible -i ${each.key}, -u ansible --become -a \"systemctl stop consul\""
   }
 }
