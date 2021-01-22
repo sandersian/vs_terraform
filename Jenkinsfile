@@ -9,7 +9,7 @@ pipeline {
         }
         stage('Terraform - Apply---') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'vault_terraform_login', passwordVariable: 'SECRET_ID', usernameVariable: 'ROLE_ID')]) {{
+                withCredentials([usernamePassword(credentialsId: 'vault_terraform_login', passwordVariable: 'SECRET_ID', usernameVariable: 'ROLE_ID')]) {
                     sh '''
                     export VAULT_CAPATH=/var/jenkins_home/CA_cert.pem
                     export VAULT_ADDR=https://vault01.hq.vs:8200
