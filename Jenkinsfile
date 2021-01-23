@@ -1,9 +1,5 @@
 pipeline {
     agent any
-    parameters {
-        string(name: 'VAULT_CAPATH', defaultValue: '/var/jenkins_home/CA_cert.pem', description: 'Vault CA Cert Path')
-        string(name: 'VAULT_ADDR', defaultValue: 'https://vault01.hq.vs:8200', description: 'Vault API address')
-    }
     stages {
         stage('--- Terraform - Init ---') {
             steps {
