@@ -38,13 +38,13 @@ resource "xenorchestra_vm" "worker_nodes" {
 
   #Wait until we know that the host has registered itself with consul
   provisioner "local-exec" {
-    command = "until [ $(consul catalog services -node=${each.key}) ]; do sleep 2; done"
+    command = "until [ $(consul catalog services -node=${each.key} 2>/dev/null) ]; do sleep 2; done"
   }
 
   #Try to deregister from consul prior to destroy
   provisioner "local-exec" {
     when    = destroy
-    command = "ssh -o StrictHostKeyChecking=no ansible@${each.key} \"sudo systemctl stop consul 2>/dev/null\" || : "
+    command = "ssh -o StrictHostKeyChecking=no ansible@${each.key} \"sudo systemctl stop consul\" || : "
   }
 }
 
@@ -68,12 +68,12 @@ resource "xenorchestra_vm" "master_nodes" {
 
   #Wait until we know that the host has registered itself with consul
   provisioner "local-exec" {
-    command = "until [ $(consul catalog services -node=${each.key}) ]; do sleep 2; done"
+    command = "until [ $(consul catalog services -node=${each.key} 2>/dev/null) ]; do sleep 2; done"
   }
 
   #Try to deregister from consul prior to destroy
   provisioner "local-exec" {
     when    = destroy
-    command = "ssh -o StrictHostKeyChecking=no ansible@${each.key} \"sudo systemctl stop consul 2> /dev/null\" || : "
+    command = "ssh -o StrictHostKeyChecking=no ansible@${each.key} \"sudo systemctl stop consul\" || : "
   }
 }
