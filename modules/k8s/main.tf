@@ -44,7 +44,7 @@ resource "xenorchestra_vm" "worker_nodes" {
   #Try to deregister from consul prior to destroy
   provisioner "local-exec" {
     when    = destroy
-    command = "ssh -o StrictHostKeyChecking=no ansible@${each.key} \"sudo systemctl stop consul\" || : "
+    command = "ssh -o StrictHostKeyChecking=no ansible@${each.key} \"sudo systemctl stop consul\ 2>/dev/null" || : "
   }
 }
 
@@ -74,6 +74,6 @@ resource "xenorchestra_vm" "master_nodes" {
   #Try to deregister from consul prior to destroy
   provisioner "local-exec" {
     when    = destroy
-    command = "ssh -o StrictHostKeyChecking=no ansible@${each.key} \"sudo systemctl stop consul\" || : "
+    command = "ssh -o StrictHostKeyChecking=no ansible@${each.key} \"sudo systemctl stop consul\ 2> /dev/null" || : "
   }
 }
