@@ -17,7 +17,6 @@ pipeline {
                         export VAULT_CAPATH
                         export VAULT_ADDR
                         . ./vault_consul_setup.bash
-                        git clone git@github.com:sandersian/vs_ansible.git
                         terraform destroy -auto-approve
                     '''
                 }
