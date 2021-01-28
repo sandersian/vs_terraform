@@ -36,13 +36,15 @@ resource "xenorchestra_vm" "worker_nodes" {
     size       = var.k8s-worker-disk_size
   }
 
+  #Wait until we know that the host has registered itself with consul
   provisioner "local-exec" {
-    command = "cd vs_ansible && ansible-playbook -i ${each.key}, k8s-common.yml"
+    command = "until [ $(consul catalog services -node=${each.key}) ]; do sleep 2; done"
   }
 
+  #Try to deregister from consul prior to destroy
   provisioner "local-exec" {
     when    = destroy
-    command = "cd vs_ansible && ansible -i ${each.key}, ${each.key} -u ansible --become -a \"systemctl stop consul\" || : "
+    command = "ssh -o StrictHostKeyChecking=no ansible@${each.key} \"sudo systemctl stop consul\" || : "
   }
 }
 
@@ -64,16 +66,14 @@ resource "xenorchestra_vm" "master_nodes" {
     size       = var.k8s-master-disk_size
   }
 
+  #Wait until we know that the host has registered itself with consul
   provisioner "local-exec" {
-    command = "cd vs_ansible && ansible-playbook -i ${each.key}, k8s-common.yml"
+    command = "until [ $(consul catalog services -node=${each.key}) ]; do sleep 2; done"
   }
 
-  provisioner "local-exec" {
-    command = "cd vs_ansible && ansible-playbook -i ${each.key}, k8s-master.yml"
-  }
-
+  #Try to deregister from consul prior to destroy
   provisioner "local-exec" {
     when    = destroy
-    command = "cd vs_ansible && ansible -i ${each.key}, ${each.key} -u ansible --become -a \"systemctl stop consul\" || :"
+    command = "ssh -o StrictHostKeyChecking=no ansible@${each.key} \"sudo systemctl stop consul\" || : "
   }
 }
