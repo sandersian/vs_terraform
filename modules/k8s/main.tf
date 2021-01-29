@@ -41,6 +41,10 @@ resource "xenorchestra_vm" "worker_nodes" {
     command = "until [ $(consul catalog services -node=${each.key} 2>/dev/null) ]; do sleep 2; done"
   }
 
+  provisioner "local-exec" {
+    command = "ssh -o StrictHostKeyChecking=no ansible@${each.key} \"sudo /usr/local/bin/add_consul_tag.sh k8s_worker\""
+  }
+
   #Try to deregister from consul prior to destroy
   provisioner "local-exec" {
     when    = destroy
@@ -69,6 +73,10 @@ resource "xenorchestra_vm" "master_nodes" {
   #Wait until we know that the host has registered itself with consul
   provisioner "local-exec" {
     command = "until [ $(consul catalog services -node=${each.key} 2>/dev/null) ]; do sleep 2; done"
+  }
+
+  provisioner "local-exec" {
+    command = "ssh -o StrictHostKeyChecking=no ansible@${each.key} \"sudo /usr/local/bin/add_consul_tag.sh k8s_master\""
   }
 
   #Try to deregister from consul prior to destroy
