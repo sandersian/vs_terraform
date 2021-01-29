@@ -42,13 +42,13 @@ resource "xenorchestra_vm" "worker_nodes" {
   }
 
   provisioner "local-exec" {
-    command = "ssh -o StrictHostKeyChecking=no ansible@${each.key} \"sudo /usr/local/bin/add_consul_tag.sh k8s_worker\""
+    command = "ssh -q -o StrictHostKeyChecking=no ansible@${each.key} \"sudo /usr/local/bin/add_consul_tag.sh k8s_worker\""
   }
 
   #Try to deregister from consul prior to destroy
   provisioner "local-exec" {
     when    = destroy
-    command = "ssh -o StrictHostKeyChecking=no ansible@${each.key} \"sudo systemctl stop consul\" || : "
+    command = "ssh -q -o StrictHostKeyChecking=no ansible@${each.key} \"sudo systemctl stop consul\" || : "
   }
 }
 
@@ -76,12 +76,12 @@ resource "xenorchestra_vm" "master_nodes" {
   }
 
   provisioner "local-exec" {
-    command = "ssh -o StrictHostKeyChecking=no ansible@${each.key} \"sudo /usr/local/bin/add_consul_tag.sh k8s_master\""
+    command = "ssh -q -o StrictHostKeyChecking=no ansible@${each.key} \"sudo /usr/local/bin/add_consul_tag.sh k8s_master\""
   }
 
   #Try to deregister from consul prior to destroy
   provisioner "local-exec" {
     when    = destroy
-    command = "ssh -o StrictHostKeyChecking=no ansible@${each.key} \"sudo systemctl stop consul\" || : "
+    command = "ssh -q -o StrictHostKeyChecking=no ansible@${each.key} \"sudo systemctl stop consul\" || : "
   }
 }
