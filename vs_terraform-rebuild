@@ -6,14 +6,9 @@ pipeline {
                 build job: 'vs_terraform-destroy', parameters: []
             }
         }
-        stage('Terraform - Apply') {
+        stage('Terraform/Ansible - Run/Apply') {
             steps {
                 build job: 'vs_terraform', parameters: []
-            }
-        }
-        stage ('Ansible - Run Playbooks') {
-            steps {
-                build job: 'vs_ansible', parameters: []
             }
         }
     }

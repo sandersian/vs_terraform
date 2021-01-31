@@ -6,7 +6,7 @@ pipeline {
                 sh 'terraform init'
             }
         }
-        stage('Run/Apply - Terraform/Ansible') {
+        stage('Terraform - Apply') {
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'vault_terraform_login',
@@ -20,6 +20,13 @@ pipeline {
                         terraform apply -auto-approve
                     '''
                 }
+            }
+        }
+        stage ('Ansible - Run Playbooks') {
+            steps {
+                build job: 'vs_ansible', parameters: [
+                //string(name: 'param1', value: "value1")
+                ]
             }
         }
     }
