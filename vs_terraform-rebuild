@@ -16,5 +16,11 @@ pipeline {
         always {
             cleanWs()
         }
+        success {
+            sh "~/bin/rocket_hook.sh ${env.JOB_NAME} 'SUCCESS' ${env.BUILD_URL} #00ff00"
+        }
+        failure {
+            sh "~/bin/rocket_hook.sh ${env.JOB_NAME} 'FAILURE' ${env.BUILD_URL} #ff0000"
+        }
     }
 }
