@@ -1,15 +1,21 @@
 pipeline {
     agent any
     stages {
-        stage('Terraform - Init') {
+        stage('Terraform Init') {
             steps {
                 sh """
-                    ~/bin/rocket_hook.sh ${env.JOB_NAME} 'Terraform Init' ${env.BUILD_URL} #0000ff
+                    ~/bin/rocket_hook.sh T '${env.JOB_NAME} - Terraform Init - STARTED'
                     terraform init
                 """
             }
+            success {
+                sh "~/bin/rocket_hook.sh TS '${env.JOB_NAME} - Terraform Init - DONE'"
+            }
+            failure {
+                sh "~/bin/rocket_hook.sh TF '${env.JOB_NAME} - Terraform Init - FAILED'"
+            }
         }
-        stage('Terraform - Apply') {
+        stage('Terraform Apply') {
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'vault_terraform_login',
@@ -17,7 +23,7 @@ pipeline {
                     usernameVariable: 'ROLE_ID'
                 )]) {
                     sh """
-                        ~/bin/rocket_hook.sh ${env.JOB_NAME} 'Terraform Apply' ${env.BUILD_URL} #0000ff
+                        ~/bin/rocket_hook.sh T "${env.JOB_NAME} - Terraform Apply - STARTED"
                         export VAULT_CAPATH
                         export VAULT_ADDR
                         . ./vault_consul_setup.bash
@@ -25,12 +31,16 @@ pipeline {
                     """
                 }
             }
+            success {
+                sh "~/bin/rocket_hook.sh TS '${env.JOB_NAME} - Terraform Apply - DONE'"
+            }
+            failure {
+                sh "~/bin/rocket_hook.sh TF '${env.JOB_NAME} - Terraform Apply - FAILED'"
+            }
         }
         stage ('Ansible - Run Playbooks') {
             steps {
-                build job: 'vs_ansible', parameters: [
-                //string(name: 'param1', value: "value1")
-                ]
+                build job: 'vs_ansible', parameters: []
             }
         }
     }
@@ -39,10 +49,10 @@ pipeline {
             cleanWs()
         }
         success {
-            sh "~/bin/rocket_hook.sh ${env.JOB_NAME} 'SUCCESS' ${env.BUILD_URL} #00ff00"
+            sh "~/bin/rocket_hook.sh JS '${env.JOB_NAME} - DONE'"
         }
         failure {
-            sh "~/bin/rocket_hook.sh ${env.JOB_NAME} 'FAILURE' ${env.BUILD_URL} #ff0000"
+            sh "~/bin/rocket_hook.sh JF '${env.JOB_NAME} - FAILED'"
         }
     }
 }
