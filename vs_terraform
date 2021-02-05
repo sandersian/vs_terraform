@@ -7,12 +7,7 @@ pipeline {
                     ~/bin/rocket_hook.sh T '${env.JOB_NAME} - Terraform Init - STARTED'
                     terraform init
                 """
-                success {
-                    sh "~/bin/rocket_hook.sh TS '${env.JOB_NAME} - Terraform Init - DONE'"
-                }
-                failure {
-                    sh "~/bin/rocket_hook.sh TF '${env.JOB_NAME} - Terraform Init - FAILED'"
-                }
+                sh "~/bin/rocket_hook.sh TS '${env.JOB_NAME} - Terraform Init - DONE'"
             }
         }
         stage('Terraform Apply') {
@@ -29,12 +24,7 @@ pipeline {
                         . ./vault_consul_setup.bash
                         terraform apply -auto-approve
                     """
-                }
-                success {
                     sh "~/bin/rocket_hook.sh TS '${env.JOB_NAME} - Terraform Apply - DONE'"
-                }
-                failure {
-                    sh "~/bin/rocket_hook.sh TF '${env.JOB_NAME} - Terraform Apply - FAILED'"
                 }
             }
         }
