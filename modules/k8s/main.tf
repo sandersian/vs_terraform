@@ -42,7 +42,7 @@ resource "xenorchestra_vm" "worker_nodes" {
   }
 
   provisioner "local-exec" {
-    command = "ssh -q -o StrictHostKeyChecking=no ansible@${each.key} \"sudo /usr/local/bin/add_consul_tag.sh k8s_worker\""
+    command = "sleep 5; ssh -q -o StrictHostKeyChecking=no ansible@${each.key} \"sudo /usr/local/bin/add_consul_tag.sh k8s_worker\""
   }
 
   #Try to deregister from consul prior to destroy
@@ -76,7 +76,7 @@ resource "xenorchestra_vm" "master_nodes" {
   }
 
   provisioner "local-exec" {
-    command = "ssh -q -o StrictHostKeyChecking=no ansible@${each.key} \"sudo /usr/local/bin/add_consul_tag.sh k8s_master\""
+    command = "sleep 5; ssh -q -o StrictHostKeyChecking=no ansible@${each.key} \"sudo /usr/local/bin/add_consul_tag.sh k8s_master\""
   }
 
   #Try to deregister from consul prior to destroy
