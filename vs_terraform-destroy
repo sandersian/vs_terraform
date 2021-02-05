@@ -3,7 +3,10 @@ pipeline {
     stages {
         stage('Terraform Init') {
             steps {
-                sh 'terraform init'
+                sh """
+                    ~/bin/rocket_hook.sh ${env.JOB_NAME} 'Terraform Init' ${env.BUILD_URL} #00FF00
+                    terraform init
+                """
             }
         }
         stage('Terraform Destroy') {
@@ -13,12 +16,13 @@ pipeline {
                     passwordVariable: 'SECRET_ID',
                     usernameVariable: 'ROLE_ID'
                 )]) {
-                    sh '''
+                    sh """
+                        ~/bin/rocket_hook.sh ${env.JOB_NAME} 'Terraform Destroy' ${env.BUILD_URL} #00FF00
                         export VAULT_CAPATH
                         export VAULT_ADDR
                         . ./vault_consul_setup.bash
                         terraform destroy -auto-approve
-                    '''
+                    """
                 }
             }
         }
@@ -26,6 +30,12 @@ pipeline {
     post {
         always {
             cleanWs()
+        }
+        success {
+            sh "~/bin/rocket_hook.sh ${env.JOB_NAME} 'SUCCESS' ${env.BUILD_URL} #00FF00"
+        }
+        failure {
+            sh "~/bin/rocket_hook.sh ${env.JOB_NAME} 'FAILURE' ${env.BUILD_URL} #FF0000"
         }
     }
 }
