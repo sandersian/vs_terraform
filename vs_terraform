@@ -16,13 +16,13 @@ pipeline {
                     passwordVariable: 'SECRET_ID',
                     usernameVariable: 'ROLE_ID'
                 )]) {
-                    sh '''
+                    sh """
                         ~/bin/rocket_hook.sh ${env.JOB_NAME} 'Terraform Apply' ${env.BUILD_URL} #0000ff
                         export VAULT_CAPATH
                         export VAULT_ADDR
                         . ./vault_consul_setup.bash
                         terraform apply -auto-approve
-                    '''
+                    """
                 }
             }
         }
@@ -44,6 +44,5 @@ pipeline {
         failure {
             sh "~/bin/rocket_hook.sh ${env.JOB_NAME} 'FAILURE' ${env.BUILD_URL} #ff0000"
         }
-
     }
 }
