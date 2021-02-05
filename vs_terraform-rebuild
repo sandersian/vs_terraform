@@ -1,13 +1,20 @@
 pipeline {
     agent any
     stages {
+        stage('Inform Rocket.chat') {
+            steps {
+                sh "~/bin/rocket_hook.sh JS '${env.BUILD_TAG} - STARTED'"
+            }
+        }
         stage('Terraform Destroy') {
             steps {
+                sh "~/bin/rocket_hook.sh J '${env.BUILD_TAG} - Calling vs_terraform-destroy'"
                 build job: 'vs_terraform-destroy', parameters: []
             }
         }
         stage('Terraform/Ansible - Run/Apply') {
             steps {
+                sh "~/bin/rocket_hook.sh J '${env.BUILD_TAG} - Calling vs_terraform'"
                 build job: 'vs_terraform', parameters: []
             }
         }
@@ -17,10 +24,10 @@ pipeline {
             cleanWs()
         }
         success {
-            sh "~/bin/rocket_hook.sh ${env.JOB_NAME} 'SUCCESS' ${env.BUILD_URL} #00ff00"
+            sh "~/bin/rocket_hook.sh JS '${env.BUILD_TAG} - DONE'"
         }
         failure {
-            sh "~/bin/rocket_hook.sh ${env.JOB_NAME} 'FAILURE' ${env.BUILD_URL} #ff0000"
+            sh "~/bin/rocket_hook.sh JF '${env.BUILD_TAG} - FAILED'"
         }
     }
 }

@@ -1,6 +1,11 @@
 pipeline {
     agent any
     stages {
+        stage('Inform Rocket.chat') {
+            steps {
+                sh "~/bin/rocket_hook.sh JS '${env.BUILD_TAG} - STARTED'"
+            }
+        }
         stage('Terraform Init') {
             steps {
                 sh """
