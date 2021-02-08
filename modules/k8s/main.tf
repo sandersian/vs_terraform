@@ -38,7 +38,7 @@ resource "xenorchestra_vm" "worker_nodes" {
 
   #Wait until we know that the host has registered itself with consul
   provisioner "local-exec" {
-    command = "until [ $(consul catalog services -node=${each.key} 2>/dev/null) ]; do sleep 2; done"
+    command = "timeout 180s sh -c \"until ping -c 1 ${each.key} > /dev/null 2>&1 ; do sleep 2; done\""
   }
 
   provisioner "local-exec" {
@@ -72,7 +72,7 @@ resource "xenorchestra_vm" "master_nodes" {
 
   #Wait until we know that the host has registered itself with consul
   provisioner "local-exec" {
-    command = "until [ $(consul catalog services -node=${each.key} 2>/dev/null) ]; do sleep 2; done"
+    command = "timeout 180s sh -c \"until ping -c 1 ${each.key} > /dev/null 2>&1; do sleep 2; done\""
   }
 
   provisioner "local-exec" {
