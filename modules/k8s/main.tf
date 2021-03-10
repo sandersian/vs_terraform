@@ -85,3 +85,37 @@ resource "xenorchestra_vm" "master_nodes" {
     command = "ssh -q -o StrictHostKeyChecking=no ansible@${each.key} \"sudo systemctl stop consul\" || : "
   }
 }
+
+resource "xenorchestra_vm" "ingress_nodes" {
+  for_each         = toset(var.k8s-ingress-instances)
+  memory_max       = var.k8s-ingress-memory_size
+  cpus             = var.k8s-ingress-cpus
+  name_label       = each.key
+  name_description = each.key
+  template         = var.template-uuid
+
+  network {
+    network_id = var.network-uuid
+  }
+
+  disk {
+    sr_id      = var.sr-uuid
+    name_label = "${each.key}-root"
+    size       = var.k8s-ingress-disk_size
+  }
+
+  #Wait until we know that the host has registered itself with consul
+  provisioner "local-exec" {
+    command = "timeout 180s sh -c \"until ping -c 1 ${each.key} > /dev/null 2>&1; do sleep 2; done\""
+  }
+
+  provisioner "local-exec" {
+    command = "ssh -q -o StrictHostKeyChecking=no ansible@${each.key} \"sudo /usr/local/bin/add_consul_tag.sh k8s_ingress\""
+  }
+
+  #Try to deregister from consul prior to destroy
+  provisioner "local-exec" {
+    when    = destroy
+    command = "ssh -q -o StrictHostKeyChecking=no ansible@${each.key} \"sudo systemctl stop consul\" || : "
+  }
+}
