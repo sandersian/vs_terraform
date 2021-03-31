@@ -6,10 +6,6 @@ variable "k8s-worker-instances" {
   type = list(string)
 }
 
-variable "k8s-ingress-instances" {
-  type = list(string)
-}
-
 variable "template-uuid" {
   type = string
 }
@@ -43,18 +39,6 @@ variable "k8s-worker-disk_size" {
 }
 
 variable "k8s-worker-cpus" {
-  type = number
-}
-
-variable "k8s-ingress-memory_size" {
-  type = number
-}
-
-variable "k8s-ingress-disk_size" {
-  type = number
-}
-
-variable "k8s-ingress-cpus" {
   type = number
 }
 
