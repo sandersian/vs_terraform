@@ -107,7 +107,7 @@ resource "xenorchestra_vm" "nfs_nodes" {
 
   disk {
     sr_id      = var.sr-uuid
-    name_label = "${each.key}-root"
+    name_label = "${each.key}-nfsdata01"
     size       = var.knfs-data_disk_size
   }
 
