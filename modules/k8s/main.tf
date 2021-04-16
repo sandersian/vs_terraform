@@ -117,7 +117,7 @@ resource "xenorchestra_vm" "nfs_nodes" {
   }
 
   provisioner "local-exec" {
-    command = "ssh -q -o StrictHostKeyChecking=no ansible@${each.key} \"sudo /usr/local/bin/add_consul_tag.sh k8s-nfs\""
+    command = "ssh -q -o StrictHostKeyChecking=no ansible@${each.key} \"sudo /usr/local/bin/add_consul_tag.sh k8s_nfs\""
   }
 
   #Try to deregister from consul prior to destroy
