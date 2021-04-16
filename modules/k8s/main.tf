@@ -105,6 +105,12 @@ resource "xenorchestra_vm" "nfs_nodes" {
     size       = var.knfs-disk_size
   }
 
+  disk {
+    sr_id      = var.sr-uuid
+    name_label = "${each.key}-root"
+    size       = var.knfs-data_disk_size
+  }
+
   #Wait until we know that the host has registered itself with consul
   provisioner "local-exec" {
     command = "timeout 180s sh -c \"until ping -c 1 ${each.key} > /dev/null 2>&1 ; do sleep 2; done\""

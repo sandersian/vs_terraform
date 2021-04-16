@@ -34,8 +34,9 @@ module "k8s" {
   k8s-worker-disk_size   = data.vault_generic_secret.worker_node_config.data["disk_size"]
   k8s-worker-cpus        = data.vault_generic_secret.worker_node_config.data["cpus"]
 
-  knfs-memory_size = data.vault_generic_secret.nfs_node_config.data["memory_size"]
-  knfs-disk_size   = data.vault_generic_secret.nfs_node_config.data["disk_size"]
-  knfs-cpus        = data.vault_generic_secret.nfs_node_config.data["cpus"]
+  knfs-memory_size       = data.vault_generic_secret.nfs_node_config.data["memory_size"]
+  knfs-disk_size         = data.vault_generic_secret.nfs_node_config.data["disk_size"]
+  knfs-cpus              = data.vault_generic_secret.nfs_node_config.data["cpus"]
+  knfs-data_disk_size    = data.vault_generic_secret.nfs_node_config.data["data_disk_size"]
 
 }

@@ -58,6 +58,10 @@ variable "knfs-cpus" {
   type = number
 }
 
+variable "knfs-data_disk_size" {
+  type = number
+}
+
 data "vault_generic_secret" "xoa_provisioner" {
   path = "secret/xoa/xoa_provisioner"
 }
