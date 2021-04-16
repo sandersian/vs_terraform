@@ -20,6 +20,7 @@ module "k8s" {
 
   k8s-master-instances  = ["mkube01"]
   k8s-worker-instances  = ["kube01", "kube02", "kube03"]
+  knfs-instances         = ["knfs01"]
 
   template-uuid = data.vault_generic_secret.default_xoa_vm.data["template-uuid"]
   sr-uuid       = data.vault_generic_secret.default_xoa_vm.data["sr-uuid"]
@@ -32,5 +33,9 @@ module "k8s" {
   k8s-worker-memory_size = data.vault_generic_secret.worker_node_config.data["memory_size"]
   k8s-worker-disk_size   = data.vault_generic_secret.worker_node_config.data["disk_size"]
   k8s-worker-cpus        = data.vault_generic_secret.worker_node_config.data["cpus"]
+
+  knfs-memory_size = data.vault_generic_secret.nfs_node_config.data["memory_size"]
+  knfs-disk_size   = data.vault_generic_secret.nfs_node_config.data["disk_size"]
+  knfs-cpus        = data.vault_generic_secret.nfs_node_config.data["cpus"]
 
 }

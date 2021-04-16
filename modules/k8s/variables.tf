@@ -6,6 +6,10 @@ variable "k8s-worker-instances" {
   type = list(string)
 }
 
+variable "knfs-instances" {
+  type = list(string)
+}
+
 variable "template-uuid" {
   type = string
 }
@@ -39,6 +43,18 @@ variable "k8s-worker-disk_size" {
 }
 
 variable "k8s-worker-cpus" {
+  type = number
+}
+
+variable "knfs-memory_size" {
+  type = number
+}
+
+variable "knfs-disk_size" {
+  type = number
+}
+
+variable "knfs-cpus" {
   type = number
 }
 
